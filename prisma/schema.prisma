@@ -25,3 +25,23 @@ enum Role{
  ADMIN
  WORKER
 }
+
+model Catalog {
+  productId Int @id @default(autoincrement())
+  barcode String @unique
+  name String
+  category String
+  unitPrice Decimal @db.Decimal(10,2)
+  minimumStockLevel Int
+  expiryWarningPeriod Int
+  createdAt DateTime @default(now())
+}
+
+
+model Inventory {
+  batchId Int @id @default(autoincrement())
+  productId Int
+  quantity Int
+  unitsPerBox Int
+  expirationDate DateTime @db.Date
+}
