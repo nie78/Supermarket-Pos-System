@@ -45,3 +45,19 @@ model Inventory {
   unitsPerBox Int
   expirationDate DateTime @db.Date
 }
+
+
+model Sale {
+  saleId Int @id @default(autoincrement())
+  total Decimal @db.Decimal(10,2)
+  createdAt DateTime @default(now())
+  userId String
+}
+
+model saleItem {
+  saleItemId Int @id @default(autoincrement())
+  saleId Int
+  quantity Int
+  unitPrice Decimal @db.Decimal(10,2)
+  productId Int
+}
