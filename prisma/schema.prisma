@@ -44,6 +44,7 @@ model Inventory {
   quantity Int
   unitsPerBox Int
   expirationDate DateTime @db.Date
+  @@index([expirationDate])
 }
 
 
@@ -52,6 +53,8 @@ model Sale {
   total Decimal @db.Decimal(10,2)
   createdAt DateTime @default(now())
   userId String
+  @@index([createdAt])
+
 }
 
 model saleItem {
