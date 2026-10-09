@@ -11,3 +11,64 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User{
+  userId String @id @default(uuid()) 
+  name String 
+  username String @unique
+  role Role @default(WORKER)
+  passwordHash String
+  createdAt DateTime @default(now())
+  sales Sale[]
+}
+
+enum Role{
+ ADMIN
+ WORKER
+}
+
+model Catalog {
+  productId Int @id @default(autoincrement())
+  barcode String @unique
+  name String
+  category String
+  unitPrice Decimal @db.Decimal(10,2)
+  minimumStockLevel Int
+  expiryWarningPeriod Int
+  createdAt DateTime @default(now())
+  batches Inventory[]
+  saleItems SaleItem[]
+}
+
+
+model Inventory {
+  batchId Int @id @default(autoincrement())
+  productId Int
+  quantity Int
+  unitsPerBox Int
+  expirationDate DateTime @db.Date
+  product Catalog @relation(fields: [productId],references: [productId])
+  @@index([expirationDate])
+}
+
+
+model Sale {
+  saleId Int @id @default(autoincrement())
+  total Decimal @db.Decimal(10,2)
+  createdAt DateTime @default(now())
+  userId String
+  saleItems SaleItem[]
+  user User @relation(fields: [userId],references: [userId])
+  @@index([createdAt])
+
+}
+
+model SaleItem {
+  saleItemId Int @id @default(autoincrement())
+  saleId Int
+  quantity Int
+  unitPrice Decimal @db.Decimal(10,2)
+  productId Int
+  product Catalog @relation(fields: [productId],references: [productId])
+  sale Sale @relation(fields: [saleId],references: [saleId])
+}
